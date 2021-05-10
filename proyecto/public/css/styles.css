@@ -1,0 +1,32 @@
+li{
+  display:inline;
+  padding-right:2%;
+  color:white;
+}
+body{
+  background-color: #D1C7B2;
+}
+h1,h2{
+    color:#498F9D;
+}
+#twitter{
+        background-color:#55ACEE;
+      }
+      #facebook{
+        background-color:#3B5998;
+      }
+      #whatsapp{
+        background-color:#25D366;
+      }
+      #telegram{
+        background-color:#0088CC;
+      }
+      button{
+        margin:1.5%;
+      }
+      span{
+        color:#5D53B4;
+      }
+.dropdown{
+	background: linear-gradient(180deg, rgba(1,53,121,1)10%,rgba(151,197,196,1)80%);
+}
