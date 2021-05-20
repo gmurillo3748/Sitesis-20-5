@@ -4,6 +4,7 @@
 
 <h2>Comptes</h2>
 <div>
+    <a href="/comptes/print">IMPRIMIR</a>
     <table class="my-5 table table-striped">
         <th>ID</th>
         <th>Compte</th>

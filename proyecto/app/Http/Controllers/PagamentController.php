@@ -27,9 +27,9 @@ class PagamentController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Devuelve el index de pagaments
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return View
      */
     public function index(){
 //        $fecha=date('Y-m-d');
@@ -40,11 +40,36 @@ class PagamentController extends Controller
     }
     
     
+    /**
+     * Valida los campos del formulario.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator($data){
+        return $data->validate([
+            'descripcion' => ['required'],
+            'nombre' => ['required'],
+            'compte_id' => ['required'],
+            'categoria_id' => ['required'],
+            'preu' => ['required'],
+            'data_inicial' => ['required'],
+            'data_final' => ['required'],
+        ]);  
+    }
+    
+    /* Devuelve el formulario para añadir un pagament.
+     * @return View
+     */
     public function addGet(){
        return View::Make('pagaments.create'); 
     }
     
+    /* Añade el pago creado y nos redirije a pagaments
+     * @return route
+     */
     public function addPost(Request $request){
+        $this->validator($request);
         $user=Auth::user();
         $pagament=new Pagament;
         $pagament->descripcion = $request['descripcion'];
@@ -60,12 +85,19 @@ class PagamentController extends Controller
         return redirect('pagaments');
     }
     
+    /*  Devuelve la vista de edición con los datos del pagament elegido
+     *  @return View
+     */
     public function edit($id){
         $pagament=Pagament::find($id);
         return View::Make('pagaments.create', compact('pagament'));
     }
     
+    /* Actualiza un pago con los datos que le llegan por HttpRequest y nos devuelve a la vista pagaments
+     * @return route
+     */
     public function update(Request $request, $id){
+        $this->validator($request);
         $user=Auth::user();
         $pagament=Pagament::find($id);
         $pagament->descripcion = $request['descripcion'];
@@ -80,6 +112,9 @@ class PagamentController extends Controller
         return redirect('pagaments');
     }
     
+    /* Devuelve los <option> pertenecientes a un select donde elegir el curso
+     * return HtmlString
+     */
     public function selectCurs(){
         $cursos = Curs::all();
         Log::Info($cursos);
@@ -90,9 +125,11 @@ class PagamentController extends Controller
         return new HtmlString($html);
     }
     
+    /* Devuelve los <option> pertenecientes a un select donde elegir la categoria
+     * return HtmlString
+     */
     public function selectCategories(){
         $categories = Categoria::all();
-        Log::Info($categories);
         $html="";
         foreach ($categories as $categoria){            
             $html.= "<option value=".$categoria->id." >".$categoria->categoria."<option>";
@@ -100,6 +137,9 @@ class PagamentController extends Controller
         return new HtmlString($html);
     }
     
+    /* Devuelve los <option> pertenecientes a un select donde elegir la cuenta
+     * return HtmlString
+     */
     public function selectComptes(){
         $comptes = Compte::all();
         Log::Info($comptes);
@@ -113,5 +153,28 @@ class PagamentController extends Controller
     public function show($id){
         $pagament=Pagament::where('id','=',$id)->first();
         return View::Make('pagaments.show', compact('pagament'));
+    }
+    
+    
+    /* Generamos el PDF del Presupuesto indicado.
+     * @return  View
+     */
+    public function print() {
+        $pagaments = Pagament::all();  
+        $filename = "Pagaments.pdf";
+        /* Generamos el pdf y nos vamos.
+         */
+        $file = base_path().'/documentos/'.$filename;
+        $view = View::Make( '/pagaments/print' , compact('pagaments') )->render();
+        //-- Revisamos el retorno de carro/salto de línea
+//        $view = str_replace("-crlf-","<br>",$view);
+        $pdf = \App::make( 'dompdf.wrapper' );
+        $pdf->loadHTML( $view );
+        $output = $pdf->output();
+        file_put_contents( $file , $output );
+        //-- Abrimos el pdf.
+        header('Content-type: application/pdf');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        readfile($file);
     }
 }

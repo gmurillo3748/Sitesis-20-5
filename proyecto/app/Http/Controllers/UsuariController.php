@@ -33,13 +33,27 @@ class UsuariController extends Controller
         return View::Make('usuaris.index', compact('usuaris'));
     }
     
+    /**
+     * Valida los campos del formulario.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator($data){
+        return $data->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'rol' => ['required'],
+            'activo' => ['required'],
+        ]);  
+    }
     
     public function addGet(){
        return View::Make('ususaris.create'); 
     }
     
     public function addPost(Request $request){
-        $user=Auth::user();
+        $this->validator($request);
         $usuari=new User;
         $usuari->name = $request['name'];
         $usuari->email = $request['email'];
@@ -56,7 +70,7 @@ class UsuariController extends Controller
     }
     
     public function update(Request $request, $id){
-        $user=Auth::user();
+        $this->validator($request);
         $usuari=User::find($id);
         $usuari->name = $request['name'];
         $usuari->email = $request['email'];

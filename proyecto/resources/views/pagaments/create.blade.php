@@ -50,9 +50,18 @@
         <div class="form-group">
             <div class="row">
                 <label required class="col-2 text-right" for="idata_final">Data Final: </label>
-                <input type="date"  class="col-4"id="idata_final" name="data_final" value="{{isset($pagament) ? $pagament->data_final : ''}}">
+                <input required type="date"  class="col-4"id="idata_final" name="data_final" value="{{isset($pagament) ? $pagament->data_final : ''}}">
             </div>
         </div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
 
         <input class="btn btn-primary" type="submit" value="Enviar">
     </form>

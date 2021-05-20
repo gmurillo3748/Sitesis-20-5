@@ -8,7 +8,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <!-- EDITOR WYSIWYG -->
     <script src="{{ asset('/vendors/ckeditor/ckeditor.js') }}"></script>
     
@@ -42,73 +43,50 @@
           </div>
       </div>
       <!-- FINAL DEL HEADER -->
-      <div class="bg-primary dropdown">
-        <ul class="py-3 my-0">
-          @guest
-          
-            
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a class="text-white mx-2" href="/home">Inici</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+               @guest
+                @inject('categorias','App\Http\Controllers\CategoriaController')
+                {{ $categorias->categoriasMenu() }}
+                <li>
+                    <a href="{{route('login')}}" class="text-white float-right px-4">Login</a>
+                </li>
+                <li>
+                    <a href="{{route('register')}}" class="text-white float-right px-4">Register</a>
+                </li>
+                @endguest
+                @auth
+                <li><a class="text-white" href="/cursos">Cursos</a></li>
+                <li><a class="text-white" href="/categories">Categories</a></li>
+                <li><a class="text-white" href="/comptes">Comptes</a></li>
+                <li><a class="text-white" href="/pagaments">Pagaments</a></li>
+                <!-- Me aseguro que el usuario registrado tiene el rol de administrador para poder acceder a usuarios -->
+                @if (Auth::user()->rol===0)
+                <li><a class="text-white" href="/usuaris">Usuaris</a></li>
+                @endif
 
-          <li><a class="text-white" href="#">Inici</a></li>
-          @inject('categorias','App\Http\Controllers\CategoriaController')
-            {{ $categorias->categoriasMenu() }}
-          <!--<li>
-            <a class="dropdown-toggle text-white" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">ESO</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="ESO/pagament_despeses.html">PAGAMENT DESPESES ESCOLARS CURS 2020-2021</a>
-              <a class="dropdown-item" href="ESO/lloguer_taquilles.html">LLOGUER TAQUILLES</a>
-              <a class="dropdown-item" href="ESO/fianca.html">Fiança projecte reciclatge llibres 4t d'ESO</a>
-              <a class="dropdown-item" href="ESO/adhesio.html">Adhesió projecte reciclatge llibres Ajuntament</a>
-            </div>
-          </li>
-          <li>
-            <a class="dropdown-toggle text-white" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Batxillerat</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="Batxillerat/pagament_despeses.html">PAGAMENT DESPESES ESCOLARS CURS 2020-2021</a>
-              <a class="dropdown-item" href="Batxillerat/adhesio.html">Adhesió projecte reciclatge llibres Ajuntament</a>
-              <a class="dropdown-item" href="Batxillerat/fianca.html">Fiança projecte reciclatge llibres 4t d'ESO</a>
-            </div></li>
-          <li>
-            <a class="dropdown-toggle text-white" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Cicles formatius</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="Cicles_Formatius/pagament_despeses.html">PAGAMENT DESPESES ESCOLARS CURS 2020-2021</a>
-              <a class="dropdown-item" href="Cicles_Formatius/adhesio.html">Adhesió projecte reciclatge llibres Ajuntament</a>
-              <a class="dropdown-item" href="Cicles_Formatius/fianca.html">Fiança projecte reciclatge llibres 4t d'ESO</a>
-            </div>
-          </li>
-          <li>Professorat</li>-->
-          
-          <li>
-              <a href="{{route('login')}}" class="text-white float-right px-4">Login</a>
-          </li>
-          <li>
-              <a href="{{route('register')}}" class="text-white float-right px-4">Register</a>
-          </li>
-          @endguest
-          @auth
-          <li><a class="text-white" href="/cursos">Cursos</a></li>
-          <li><a class="text-white" href="/categories">Categories</a></li>
-          <li><a class="text-white" href="/comptes">Comptes</a></li>
-          <li><a class="text-white" href="/pagaments">Pagaments</a></li>
-          <!-- Me aseguro que el usuario registrado tiene el rol de administrador para poder acceder a usuarios -->
-          @if (Auth::user()->rol===0)
-          <li><a class="text-white" href="/usuaris">Usuaris</a></li>
-          @endif
-          
-          <li>
-            <a class="text-white float-right px-4" href="{{ route('logout') }}"
-               onclick="event.preventDefault();
-                             document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
-            </a>
+                <li>
+                  <a class="text-white float-right px-4" href="{{ route('logout') }}"
+                     onclick="event.preventDefault();
+                                   document.getElementById('logout-form').submit();">
+                      {{ __('Logout') }}
+                  </a>
 
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none" hidden>
-                @csrf
-            </form>
-          </li>
-          @endauth
-        </ul>
-      </div>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none" hidden>
+                      @csrf
+                  </form>
+                </li>
+                @endauth
 
+                </ul>
+
+                </div>
+              </nav>
       <!-- FINAL DEL NAVBAR -->
       <div class="bg-white p-5 ">
         @yield('content')

@@ -4,6 +4,7 @@
 
 <h2>Pagaments</h2>
 <div>
+    <a href="/pagaments/print">IMPRIMIR</a>
     <table class="my-5 table table-striped">
         <th>ID</th>
         <th>Nom</th>
@@ -19,8 +20,8 @@
             <td>{{$pagament->id}}</td>
             <td>{{$pagament->nombre}}</td>
             <td>{{$pagament->descripcion}}</td>
-            <td>{{$pagament->categoria()->categoria}}</td>
-            <td>{{$pagament->cuenta()->compte}}</td>
+            <td>{{isset($pagament->categoria_id) ? $pagament->categoria()->categoria : '' }}</td>
+            <td>{{isset($pagament->compte_id) ? $pagament->cuenta()->compte : '' }}</td>
             <td>{{$pagament->preu}}</td>
             <td>{{$pagament->data_inicial}}</td>
             <td>{{$pagament->data_final}}</td>

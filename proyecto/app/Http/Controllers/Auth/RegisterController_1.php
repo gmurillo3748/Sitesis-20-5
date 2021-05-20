@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
+use Session;
+
 class RegisterController extends Controller
 {
     /*
@@ -50,11 +52,28 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        Log::Info($data);
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'g-recaptcha-response' => 'required|captcha',
+            'g-recaptcha-response' => function ($attribute, $value, $fail) {
+                $secretKey = config('services.recaptcha.secret');
+                Log::Info($secretKey);
+                $response = $value;
+                $userIP = $_SERVER['REMOTE_ADDR'];
+                $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&$response=$response&remoteip=$userIP";
+                //$url = 'https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&$response='.$response.'&remoteip='.$userIP.'';
+                $response = \file_get_contents($url);
+                Log::Info($response); //COMO VISUALIZAR?
+                $response = json_decode($response);
+                
+                if (!$response->success) {
+                    Session::flash('g-recaptcha-response','Si us plau, marca el reCaptcha');
+                    Session::flash('alert-class','alter-danger');
+                    $fail($attribute.'El reCaptcha ha fallat.');
+                }
+            },
         ]);
     }
 
@@ -66,7 +85,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

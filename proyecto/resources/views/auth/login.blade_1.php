@@ -39,12 +39,6 @@
                             </div>
                         </div>
                         
-                        <!-- CAPTCHA DE GOOGLE-->
-                        <div class="col-md-6 offset-md-4">
-                            {!! NoCaptcha::renderJs() !!}
-                            {!! NoCaptcha::display() !!}
-                        </div>
-                        <!-- MOSTRAR ERRORES DEL CAPTCHA-->
                         @if($errors->has('g-recaptcha-response'))
                         
                         <p class="text-danger">
@@ -52,6 +46,9 @@
                         </p>
                         
                         @endif
+                        
+                        {!! NoCaptcha::renderJs() !!}
+                        {!! NoCaptcha::display() !!}
 
                         <div class="form-group row">
                             <div class="col-md-6 offset-md-4">

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pagaments/add', 'PagamentController@addPost')->name('addPost');
     Route::get('/pagaments/edit/{id}', 'PagamentController@edit')->name('edit');
     Route::post('/pagaments/update/{id}', 'PagamentController@update')->name('update');
+    Route::get('/pagaments/print', 'PagamentController@print')->name('print');
     
     //---COMPTES---
     Route::get('/comptes', 'CompteController@index')->name('index');
@@ -52,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/comptes/edit/{id}', 'CompteController@edit')->name('edit');
     Route::post('/comptes/update/{id}', 'CompteController@update')->name('update');
     Route::get('/comptes/remove/{id}', 'CompteController@remove')->name('remove');
+    Route::get('/comptes/print', 'CompteController@print')->name('print');
     
     //---CATEGORIAS---
     Route::get('/categories', 'CategoriaController@index')->name('index');
@@ -61,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     //Route::get('/categories/edit/{id}', [\App\Http\Controllers\CategoriaController::class, 'edit']);
     Route::post('/categories/update/{id}', 'CategoriaController@update')->name('update');
     Route::get('/categories/remove/{id}', 'CategoriaController@remove')->name('remove');
+    Route::get('/categories/print', 'CategoriaController@print')->name('print');
     
     //---CURSOS---
     Route::get('/cursos', 'CursController@index')->name('index');

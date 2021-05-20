@@ -26,9 +26,9 @@ class CursController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Devuelve el index de pagaments
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return View
      */
     public function index(){
         $cursos = Curs::all();
@@ -36,12 +36,27 @@ class CursController extends Controller
         return View::Make('cursos.index', compact('cursos'));
     }
     
+    /**
+     * Valida los campos del formulario.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator($data){
+        return $data->validate([
+            'curs' => ['required', 'string', 'max:255'],
+        ]);  
+    }
     
+    /* Devuelve el formulario para añadir un pagament.
+     * @return View
+     */
     public function addGet(){
        return View::Make('cursos.create'); 
     }
     
     public function addPost(Request $request){
+        $this->validator($request);
         $user=Auth::user();
         $curs=new Curs;
         $curs->curs = $request['curs'];
@@ -57,6 +72,7 @@ class CursController extends Controller
     }
     
     public function update(Request $request, $id){
+        $this->validator($request);
         $user=Auth::user();
         $curs=Curs::find($id);
         $curs->curs=$request['curs'];

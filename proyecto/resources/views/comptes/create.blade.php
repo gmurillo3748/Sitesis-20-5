@@ -19,6 +19,15 @@
             <label class="col-3" for="iclau">Clau: </label>
             <input required class="col-7" id="iclau" name="clau" value="{{isset($compte) ? $compte->clau : ''}}">
         </div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <br>
         <br>
         <input class="btn btn-primary" type="submit" value="Enviar">
